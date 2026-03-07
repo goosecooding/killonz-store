@@ -99,7 +99,6 @@ def cart_add(request, product_id):
     return redirect(request.META.get('HTTP_REFERER', 'cart'))
 
 
-@require_POST
 def cart_remove(request, product_id):
     cart_data = get_cart(request)
     cart_data.pop(str(product_id), None)
