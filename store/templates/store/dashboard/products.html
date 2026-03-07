@@ -1,0 +1,68 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}Products — Dashboard{% endblock %}
+{% block page_title %}Products{% endblock %}
+{% block nav_products %}active{% endblock %}
+
+{% block content %}
+<div class="table-card">
+    <div class="table-header">
+        <h3><i class="fa-solid fa-box" style="color:var(--brand);margin-right:6px"></i>All Products ({{ products.count }})</h3>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <form class="search-bar" method="get">
+                <input type="text" name="q" placeholder="Search products..." value="{{ q }}">
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+            <a href="{% url 'product_add' %}" class="btn btn-accent"><i class="fa-solid fa-plus"></i> Add Product</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:52px;height:52px;object-fit:contain;border-radius:8px;background:#f7f7f7;padding:4px">
+                    {% else %}
+                    <div style="width:52px;height:52px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ccc"><i class="fa-solid fa-image"></i></div>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'product' product.slug %}" target="_blank" style="font-weight:700;color:var(--brand);text-decoration:none">{{ product.name }}</a>
+                </td>
+                <td><span style="background:#f0e6ff;color:#7c3aed;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">{{ product.category.name }}</span></td>
+                <td><strong>{{ product.price|floatformat:0 }} DA</strong></td>
+                <td>
+                    <form method="post" action="{% url 'toggle_stock' product.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit" class="badge {% if product.is_in_stock %}badge-instock{% else %}badge-outstock{% endif %}" style="border:none;cursor:pointer;font-family:inherit">
+                            {% if product.is_in_stock %}✓ In Stock{% else %}✗ Out of Stock{% endif %}
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    {% if product.is_featured %}
+                    <span class="badge" style="background:#fff3cd;color:#856404">⭐ Yes</span>
+                    {% else %}
+                    <span style="color:#ccc;font-size:13px">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="display:flex;gap:6px">
+                        <a href="{% url 'product_edit' product.pk %}" class="btn btn-warning btn-xs"><i class="fa-solid fa-pencil"></i></a>
+                        <form method="post" action="{% url 'product_delete' product.pk %}" onsubmit="return confirm('Delete {{ product.name }}?')" style="display:inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;color:#aaa;padding:50px">No products found. <a href="{% url 'product_add' %}" style="color:var(--brand)">Add your first product</a></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

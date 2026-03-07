@@ -1,0 +1,40 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}Categories — Dashboard{% endblock %}
+{% block page_title %}Categories{% endblock %}
+{% block nav_cats %}active{% endblock %}
+
+{% block content %}
+<div class="table-card">
+    <div class="table-header">
+        <h3><i class="fa-solid fa-layer-group" style="color:var(--brand);margin-right:6px"></i>Categories ({{ categories.count }})</h3>
+        <a href="{% url 'category_add' %}" class="btn btn-accent"><i class="fa-solid fa-plus"></i> Add Category</a>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Icon</th><th>Name</th><th>Slug</th><th>Products</th><th>Order</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            {% for cat in categories %}
+            <tr>
+                <td>
+                    {% if cat.icon %}
+                    <img src="{{ cat.icon.url }}" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:#f7f7f7;padding:4px">
+                    {% else %}
+                    <div style="width:44px;height:44px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ccc"><i class="fa-solid fa-layer-group"></i></div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ cat.name }}</strong></td>
+                <td style="font-size:12px;color:#888">{{ cat.slug }}</td>
+                <td><strong>{{ cat.product_count }}</strong></td>
+                <td>{{ cat.order }}</td>
+                <td>
+                    <a href="{% url 'category' cat.slug %}" target="_blank" class="btn btn-outline btn-xs"><i class="fa-solid fa-external-link"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;color:#aaa;padding:50px">No categories yet. <a href="{% url 'category_add' %}" style="color:var(--brand)">Add your first</a></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

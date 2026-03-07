@@ -1,0 +1,41 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}Orders — Dashboard{% endblock %}
+{% block page_title %}Orders{% endblock %}
+{% block nav_orders %}active{% endblock %}
+
+{% block content %}
+<div class="table-card">
+    <div class="table-header">
+        <h3><i class="fa-solid fa-clipboard-list" style="color:var(--brand);margin-right:6px"></i>All Orders</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            {% for status, label in statuses %}
+            <a href="?status={{ status }}" class="btn btn-sm {% if status_filter == status %}btn-primary{% else %}btn-outline{% endif %}">{{ label }}</a>
+            {% endfor %}
+            <a href="?" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Customer</th><th>Phone</th><th>Email</th><th>Wilaya</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><strong>#{{ order.pk }}</strong></td>
+                <td>{{ order.customer_name }}</td>
+                <td><a href="tel:{{ order.phone }}" style="color:var(--brand);text-decoration:none;font-weight:600">{{ order.phone }}</a></td>
+                <td style="font-size:12px;color:#888">{{ order.email|default:"—" }}</td>
+                <td>{{ order.wilaya|default:"—" }}</td>
+                <td>{{ order.items.count }}</td>
+                <td><strong>{{ order.total|floatformat:0 }} DA</strong></td>
+                <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                <td style="color:#888;font-size:12px">{{ order.created_at|date:"M d Y, H:i" }}</td>
+                <td><a href="{% url 'dashboard_order_detail' order.pk %}" class="btn btn-primary btn-xs">View</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="10" style="text-align:center;color:#aaa;padding:50px">No orders found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

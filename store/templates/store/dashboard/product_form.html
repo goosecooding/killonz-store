@@ -1,0 +1,140 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}{{ action }} Product — Dashboard{% endblock %}
+{% block page_title %}{{ action }} Product{% endblock %}
+{% block nav_products %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+.specs-row { display:grid; grid-template-columns:1fr 1fr 40px; gap:10px; align-items:center; margin-bottom:10px; }
+.specs-row input { margin:0; }
+.remove-spec { background:#fee2e2; border:none; color:#e53e3e; border-radius:8px; width:36px; height:36px; cursor:pointer; font-size:1rem; transition:background .2s; }
+.remove-spec:hover { background:#fca5a5; }
+.img-preview { width:120px; height:120px; object-fit:contain; border-radius:10px; background:#f7f7f7; padding:8px; margin-top:10px; display:block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:18px">
+    <a href="{% url 'dashboard_products' %}" class="btn btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Products</a>
+</div>
+
+<div class="form-card" style="max-width:800px">
+    <h2 style="font-family:var(--fh);font-size:1.2rem;font-weight:800;color:var(--brand);margin-bottom:24px">
+        <i class="fa-solid fa-{% if action == 'Add' %}plus-circle{% else %}pencil{% endif %}" style="margin-right:8px"></i>{{ action }} Product
+    </h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group">
+                <label>Product Name *</label>
+                <input type="text" name="name" value="{{ product.name|default:'' }}" placeholder="e.g. NVIDIA RTX 4090" required>
+            </div>
+            <div class="form-group">
+                <label>Category *</label>
+                <select name="category" required>
+                    <option value="">— Select Category —</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.pk }}" {% if product and product.category_id == cat.pk %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Price (DA) *</label>
+            <input type="number" name="price" value="{{ product.price|default:'' }}" placeholder="e.g. 150000" step="0.01" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" placeholder="Product description...">{{ product.description|default:'' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Product Image</label>
+            <input type="file" name="image" accept="image/*" onchange="previewImage(this)">
+            {% if product and product.image %}
+            <img src="{{ product.image.url }}" alt="Current image" class="img-preview" id="imgPreview">
+            <p class="form-hint">Current image shown. Upload new one to replace.</p>
+            {% else %}
+            <img id="imgPreview" class="img-preview" style="display:none">
+            {% endif %}
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+            <label class="form-check" style="background:#f9f6ff;border-radius:10px;padding:14px;cursor:pointer">
+                <input type="checkbox" name="is_in_stock" {% if not product or product.is_in_stock %}checked{% endif %}>
+                <div>
+                    <div style="font-weight:700;color:#1a1a1a">In Stock</div>
+                    <div class="form-hint" style="margin-top:0">Uncheck to mark as out of stock</div>
+                </div>
+            </label>
+            <label class="form-check" style="background:#f9f6ff;border-radius:10px;padding:14px;cursor:pointer">
+                <input type="checkbox" name="is_featured" {% if product and product.is_featured %}checked{% endif %}>
+                <div>
+                    <div style="font-weight:700;color:#1a1a1a">⭐ Featured</div>
+                    <div class="form-hint" style="margin-top:0">Show on homepage</div>
+                </div>
+            </label>
+        </div>
+
+        <!-- Specifications -->
+        <div class="form-group">
+            <label>Specifications (optional)</label>
+            <div id="specs-container">
+                {% if product and product.specs %}
+                {% for key, val in product.specs.items %}
+                <div class="specs-row">
+                    <input type="text" name="spec_key" value="{{ key }}" placeholder="e.g. RAM">
+                    <input type="text" name="spec_val" value="{{ val }}" placeholder="e.g. 16GB">
+                    <button type="button" class="remove-spec" onclick="this.closest('.specs-row').remove()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="specs-row">
+                    <input type="text" name="spec_key" placeholder="e.g. RAM">
+                    <input type="text" name="spec_val" placeholder="e.g. 16GB">
+                    <button type="button" class="remove-spec" onclick="this.closest('.specs-row').remove()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                {% endif %}
+            </div>
+            <button type="button" onclick="addSpec()" class="btn btn-outline btn-sm" style="margin-top:10px">
+                <i class="fa-solid fa-plus"></i> Add Spec
+            </button>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:8px">
+            <button type="submit" class="btn btn-accent" style="padding:12px 28px">
+                <i class="fa-solid fa-save"></i> {{ action }} Product
+            </button>
+            <a href="{% url 'dashboard_products' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function addSpec() {
+    const container = document.getElementById('specs-container');
+    const row = document.createElement('div');
+    row.className = 'specs-row';
+    row.innerHTML = `
+        <input type="text" name="spec_key" placeholder="e.g. Storage">
+        <input type="text" name="spec_val" placeholder="e.g. 512GB">
+        <button type="button" class="remove-spec" onclick="this.closest('.specs-row').remove()"><i class="fa-solid fa-xmark"></i></button>
+    `;
+    container.appendChild(row);
+    row.querySelector('input').focus();
+}
+function previewImage(input) {
+    const preview = document.getElementById('imgPreview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

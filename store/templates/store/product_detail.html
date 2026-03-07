@@ -1,0 +1,152 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block title %}{{ product.name }} — KILLONZ{% endblock %}
+
+{% block extra_css %}
+<style>
+.page-header { background:linear-gradient(135deg,var(--brand),#5c2d8c); color:#fff; padding:26px 24px; }
+.page-header-inner { max-width:1400px; margin:0 auto; }
+.breadcrumb { display:flex; align-items:center; gap:8px; font-size:0.85rem; opacity:0.8; }
+.breadcrumb a { color:#fff; text-decoration:none; }
+
+.product-body { max-width:1400px; margin:0 auto; padding:36px 20px; }
+.product-layout { display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+.product-img-wrap { background:#fff; border-radius:16px; padding:32px; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; min-height:400px; }
+.product-img-wrap img { max-width:100%; max-height:380px; object-fit:contain; }
+.no-img-placeholder { color:#ccc; text-align:center; }
+.no-img-placeholder i { font-size:5rem; display:block; margin-bottom:10px; }
+
+.product-info {}
+.product-category { font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); font-weight:700; margin-bottom:8px; }
+.product-name { font-family:var(--fh); font-size:2rem; font-weight:900; color:var(--color); line-height:1.2; margin-bottom:14px; }
+.stock-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; margin-bottom:18px; }
+.stock-badge.in { background:#d4edda; color:#155724; }
+.stock-badge.out { background:#f8d7da; color:#721c24; }
+.product-price { font-family:var(--fh); font-size:2.4rem; font-weight:900; color:var(--brand); margin-bottom:20px; }
+.product-price .da { font-size:1.2rem; }
+.product-desc { font-size:0.95rem; color:#555; line-height:1.8; margin-bottom:24px; }
+
+/* Specs table */
+.specs-title { font-family:var(--fh); font-size:1rem; font-weight:800; color:var(--color); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
+.specs-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+.specs-table tr:nth-child(even) td { background:#f8f6fb; }
+.specs-table td { padding:9px 12px; font-size:0.9rem; border-bottom:1px solid #eee; }
+.specs-table td:first-child { font-weight:700; color:var(--brand); width:40%; }
+
+.qty-row { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.qty-label { font-weight:600; font-size:0.9rem; color:var(--color2); }
+.qty-ctrl { display:flex; align-items:center; gap:0; border:2px solid var(--brand); border-radius:10px; overflow:hidden; }
+.qty-ctrl button { background:transparent; border:none; padding:8px 14px; cursor:pointer; font-size:1rem; font-weight:700; color:var(--brand); transition:background .2s; }
+.qty-ctrl button:hover { background:var(--brand); color:#fff; }
+.qty-ctrl input { width:48px; text-align:center; border:none; border-left:2px solid var(--brand); border-right:2px solid var(--brand); font-size:1rem; font-weight:700; color:var(--color); padding:8px 4px; outline:none; }
+.btn-add-big { padding:14px 32px; font-size:1rem; border-radius:10px; }
+
+/* Related */
+.section-title { font-family:var(--fh); font-size:22px; font-weight:800; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
+.section-title::after { content:''; flex:1; height:2px; background:linear-gradient(to right,var(--brand),transparent); }
+.products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:18px; }
+
+@media (max-width:900px) { .product-layout { grid-template-columns:1fr; } }
+@media (max-width:480px) { .product-name { font-size:1.5rem; } .product-price { font-size:1.9rem; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-inner">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <i class="fa-solid fa-chevron-right" style="font-size:10px"></i>
+            <a href="{% url 'category' product.category.slug %}">{{ product.category.name }}</a>
+            <i class="fa-solid fa-chevron-right" style="font-size:10px"></i>
+            <span>{{ product.name }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="product-body">
+    <div class="product-layout">
+        <!-- Image -->
+        <div class="product-img-wrap">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+            <div class="no-img-placeholder">
+                <i class="fa-solid fa-image"></i>
+                <p>No image available</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="product-info">
+            <div class="product-category">{{ product.category.name }}</div>
+            <h1 class="product-name">{{ product.name }}</h1>
+            <span class="stock-badge {% if product.is_in_stock %}in{% else %}out{% endif %}">
+                {% if product.is_in_stock %}
+                <i class="fa-solid fa-circle-check"></i> In Stock
+                {% else %}
+                <i class="fa-solid fa-circle-xmark"></i> Out of Stock
+                {% endif %}
+            </span>
+            <div class="product-price">{{ product.price|floatformat:0 }} <span class="da">DA</span></div>
+
+            {% if product.description %}
+            <p class="product-desc">{{ product.description }}</p>
+            {% endif %}
+
+            {% if product.specs %}
+            <div class="specs-title">Specifications</div>
+            <table class="specs-table">
+                {% for key, val in product.specs.items %}
+                <tr><td>{{ key }}</td><td>{{ val }}</td></tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+
+            {% if product.is_in_stock %}
+            <form method="post" action="{% url 'cart_add' product.pk %}">
+                {% csrf_token %}
+                <div class="qty-row">
+                    <span class="qty-label">Quantity:</span>
+                    <div class="qty-ctrl">
+                        <button type="button" onclick="changeQty(-1)">−</button>
+                        <input type="number" name="quantity" id="qty" value="1" min="1" max="99">
+                        <button type="button" onclick="changeQty(1)">+</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-add-big">
+                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                </button>
+            </form>
+            {% else %}
+            <button class="btn btn-add-big" disabled style="background:#e0e0e0;color:#999;cursor:not-allowed;border:none">
+                <i class="fa-solid fa-ban"></i> Out of Stock
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Related products -->
+    {% if related %}
+    <div style="margin-top:60px">
+        <h2 class="section-title">Related Products</h2>
+        <div class="products-grid">
+            {% for product in related %}
+            {% include 'store/partials/product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeQty(delta) {
+    const input = document.getElementById('qty');
+    const newVal = Math.max(1, Math.min(99, parseInt(input.value) + delta));
+    input.value = newVal;
+}
+</script>
+{% endblock %}

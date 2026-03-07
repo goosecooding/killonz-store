@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KILLONZ Store{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f0f0f0;
+            --bg2: #e0e0e0;
+            --color: #1a1a1a;
+            --color2: #333;
+            --brand: #2b0f3f;
+            --accent: #76b900;
+            --accent2: #6fb98f;
+            --ff: 'Poppins', sans-serif;
+            --fh: 'Be Vietnam Pro', sans-serif;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        body { font-family: var(--ff); background: var(--bg); color: var(--color); }
+
+        /* ── NAV ── */
+        .nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 90px; width: 100%;
+            position: fixed; top: 0; z-index: 1000;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: var(--brand); }
+        .brand span { font-family: var(--fh); font-size: 1.9rem; font-weight: 900; color: var(--brand); letter-spacing: 1px; }
+        .nav-search { display: flex; align-items: center; gap: 8px; }
+        .nav-search form { display: flex; gap: 8px; }
+        .nav-search input {
+            width: 320px; height: 38px; border-radius: 10px;
+            padding: 0 14px; border: 2px solid var(--brand);
+            color: var(--color); font-family: var(--ff); font-weight: 500;
+            outline: none; background: transparent; transition: border-color 0.2s;
+        }
+        .nav-search input:focus { border-color: var(--accent); }
+        .nav-search button {
+            background: var(--brand); padding: 7px 14px;
+            border: none; border-radius: 10px; cursor: pointer;
+        }
+        .nav-search button i { color: #ccc; }
+        .nav-links {
+            position: relative; display: flex; align-items: center;
+            gap: 28px; padding: 12px 26px;
+            background: rgba(192,157,157,0.25);
+            backdrop-filter: blur(14px); border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .nav-links a {
+            position: relative; z-index: 2;
+            display: flex; align-items: center; gap: 6px;
+            text-decoration: none; color: var(--color2);
+            font-family: var(--ff); font-size: 0.9rem; white-space: nowrap;
+        }
+        .nav-links a .badge {
+            background: #e53e3e; color: #fff; font-size: 11px;
+            border-radius: 50%; width: 18px; height: 18px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-weight: 700; margin-left: 2px;
+        }
+        .nav-links .hover-bg {
+            opacity: 0; position: absolute; top: 0; left: 0;
+            width: 80px; background: #fff; height: 100%;
+            border-radius: 10px; z-index: 1;
+            transition: left .45s ease, width .45s ease, opacity .3s ease;
+        }
+        .nav-links a:nth-child(1):hover ~ .hover-bg { opacity:1; left:16px; width:92px; }
+        .nav-links a:nth-child(2):hover ~ .hover-bg { opacity:1; left:126px; width:120px; }
+        .nav-links a:nth-child(3):hover ~ .hover-bg { opacity:1; left:253px; width:108px; }
+
+        /* hamburger */
+        .hamburger { display:none; flex-direction:column; justify-content:center; gap:5px; width:38px; height:38px; cursor:pointer; background:none; border:none; padding:4px; z-index:1100; }
+        .hamburger span { display:block; height:3px; border-radius:3px; background:var(--brand); transition:transform .35s ease, opacity .25s ease, width .3s ease; transform-origin:center; }
+        .hamburger span:nth-child(2) { width:70%; }
+        .hamburger.open span:nth-child(1) { transform:translateY(8px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity:0; width:0; }
+        .hamburger.open span:nth-child(3) { transform:translateY(-8px) rotate(-45deg); }
+
+        /* mobile drawer */
+        .mobile-menu { display:none; position:fixed; top:90px; left:0; width:100%; background:rgba(255,255,255,0.97); backdrop-filter:blur(12px); flex-direction:column; z-index:999; border-top:1px solid rgba(43,15,63,0.1); box-shadow:0 8px 20px rgba(0,0,0,0.12); transform:translateY(-8px); opacity:0; pointer-events:none; transition:transform .3s ease, opacity .3s ease; }
+        .mobile-menu.open { display:flex; transform:translateY(0); opacity:1; pointer-events:all; }
+        .mobile-search { display:flex; align-items:center; gap:10px; padding:16px 20px; border-bottom:1px solid rgba(43,15,63,0.08); }
+        .mobile-search form { display:flex; gap:8px; width:100%; }
+        .mobile-search input { flex:1; height:38px; border-radius:10px; padding:0 12px; border:2px solid var(--brand); font-family:var(--ff); outline:none; background:transparent; }
+        .mobile-search button { background:var(--brand); padding:8px 13px; border:none; border-radius:10px; cursor:pointer; }
+        .mobile-search button i { color:#ccc; }
+        .mobile-menu a { display:flex; align-items:center; gap:10px; padding:16px 24px; text-decoration:none; color:var(--color2); font-family:var(--ff); border-bottom:1px solid rgba(43,15,63,0.06); transition:background .2s; }
+        .mobile-menu a:hover { background:rgba(192,157,157,0.2); }
+
+        @media (max-width:900px) { .nav-search { display:none; } }
+        @media (max-width:768px) { .nav-links { display:none; } .hamburger { display:flex; } }
+        @media (max-width:400px) { .brand span { font-size:1.4rem; } }
+
+        /* ── MAIN CONTENT ── */
+        .main { margin-top: 90px; min-height: calc(100vh - 90px); }
+
+        /* ── MESSAGES ── */
+        .messages-container { position:fixed; top:100px; right:20px; z-index:2000; display:flex; flex-direction:column; gap:8px; }
+        .message { padding:12px 20px; border-radius:10px; font-family:var(--ff); font-size:0.9rem; font-weight:500; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideIn .3s ease; max-width:320px; }
+        .message.success { background:#d4edda; color:#155724; border-left:4px solid #28a745; }
+        .message.error { background:#f8d7da; color:#721c24; border-left:4px solid #dc3545; }
+        .message.info { background:#d1ecf1; color:#0c5460; border-left:4px solid #17a2b8; }
+        @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+        /* ── FOOTER ── */
+        footer { background:var(--brand); color:#e0d4f0; padding:40px 24px 20px; margin-top:60px; }
+        .footer-inner { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; }
+        footer h4 { font-family:var(--fh); font-size:1.1rem; color:#fff; margin-bottom:14px; }
+        footer p, footer a { font-size:0.9rem; line-height:1.8; color:#c9b8e0; text-decoration:none; display:block; }
+        footer a:hover { color:#fff; }
+        .footer-bottom { max-width:1400px; margin:30px auto 0; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1); text-align:center; font-size:0.85rem; color:#c9b8e0; }
+
+        /* ── PRODUCT CARD (shared) ── */
+        .product-card {
+            background: #fff; border-radius: var(--radius);
+            overflow: hidden; cursor: pointer;
+            box-shadow: var(--shadow); position: relative;
+            transition: var(--transition);
+            display: flex; flex-direction: column;
+        }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+        .product-card .img-wrap { position:relative; padding-top:65%; overflow:hidden; background:#f7f7f7; }
+        .product-card .img-wrap img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; padding:12px; transition:transform .3s; }
+        .product-card:hover .img-wrap img { transform:scale(1.06); }
+        .product-card .out-badge { position:absolute; top:10px; right:10px; background:#e53e3e; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+        .product-card .featured-badge { position:absolute; top:10px; left:10px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+        .product-card .card-body { padding:14px; flex:1; display:flex; flex-direction:column; }
+        .product-card .card-cat { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+        .product-card .card-name { font-family:var(--fh); font-size:0.95rem; font-weight:700; color:var(--color); margin-bottom:6px; line-height:1.3; }
+        .product-card .card-price { font-family:var(--fh); font-size:1.1rem; font-weight:800; color:var(--brand); margin-top:auto; }
+        .product-card .card-price .da { font-size:0.8rem; font-weight:600; }
+        .card-actions { padding:12px 14px 14px; display:flex; gap:8px; }
+        .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:9px 18px; border-radius:8px; border:none; cursor:pointer; font-family:var(--ff); font-size:0.85rem; font-weight:600; text-decoration:none; transition:var(--transition); }
+        .btn-primary { background:var(--brand); color:#fff; }
+        .btn-primary:hover { background:#3d1559; }
+        .btn-primary:disabled { background:#ccc; cursor:not-allowed; }
+        .btn-outline { background:transparent; color:var(--brand); border:2px solid var(--brand); }
+        .btn-outline:hover { background:var(--brand); color:#fff; }
+        .btn-accent { background:var(--accent); color:#fff; }
+        .btn-accent:hover { background:#68a300; }
+        .btn-danger { background:#e53e3e; color:#fff; }
+        .btn-danger:hover { background:#c53030; }
+        .btn-sm { padding:6px 12px; font-size:0.8rem; }
+        .btn-full { width:100%; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="nav">
+    <a href="{% url 'home' %}" class="brand">
+        <img src="{% static 'store/images/logo.png' %}" alt="KILLONZ" onerror="this.style.background='#2b0f3f';this.src=''">
+        <span>KILLONZ</span>
+    </a>
+    <div class="nav-search">
+        <form method="get" action="{% url 'home' %}">
+            <input type="text" name="q" placeholder="Search for any products..." value="{{ request.GET.q }}">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'cart' %}">
+            <i class="fa-solid fa-cart-arrow-down"></i> Cart
+            {% if cart_count > 0 %}<span class="badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+        <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> Contact</a>
+        <div class="hover-bg"></div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-search">
+        <form method="get" action="{% url 'home' %}">
+            <input type="text" name="q" placeholder="Search for any products...">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-arrow-down"></i> Cart
+        {% if cart_count > 0 %}({{ cart_count }}){% endif %}
+    </a>
+    <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+    <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> Contact</a>
+</div>
+
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+<footer id="contact">
+    <div class="footer-inner">
+        <div>
+            <h4>KILLONZ</h4>
+            <p>Your #1 destination for PC components, gaming gear, and tech accessories in Algeria.</p>
+            <p style="margin-top:10px">التوصيل لـ 58 ولاية</p>
+        </div>
+        <div>
+            <h4>Quick Links</h4>
+            {% for cat in categories %}
+            <a href="{% url 'category' cat.slug %}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        <div>
+            <h4>Contact Us</h4>
+            <p><i class="fa-solid fa-phone" style="margin-right:8px"></i> +213 XXX XXX XXX</p>
+            <p><i class="fa-brands fa-facebook" style="margin-right:8px"></i> KILLONZ Store</p>
+            <p><i class="fa-brands fa-instagram" style="margin-right:8px"></i> @killonz</p>
+            <p><i class="fa-solid fa-location-dot" style="margin-right:8px"></i> Algiers, Algeria</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 KILLONZ Store. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Hamburger
+    const ham = document.getElementById('hamburger');
+    const mob = document.getElementById('mobileMenu');
+    ham?.addEventListener('click', () => {
+        ham.classList.toggle('open');
+        mob.classList.toggle('open');
+    });
+    // Auto-dismiss messages
+    setTimeout(() => {
+        document.querySelectorAll('.message').forEach(m => {
+            m.style.transition = 'opacity .5s';
+            m.style.opacity = '0';
+            setTimeout(() => m.remove(), 500);
+        });
+    }, 4000);
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

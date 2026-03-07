@@ -1,0 +1,235 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}KILLONZ — PC Components & Gaming Gear{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── HERO ── */
+.hero-section { max-width:1400px; margin:0 auto 0; padding:24px 20px 0; }
+.hero-grid { display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+
+/* Main banner / slider */
+.nvidia-banner {
+    background: linear-gradient(135deg, #1a3a3a 0%, #2d5555 100%);
+    border-radius: 14px; overflow: hidden;
+    position: relative; min-height: 400px;
+    color: #fff; cursor: pointer;
+}
+.slide { display:none; align-items:center; justify-content:space-between; padding:44px 44px 70px; opacity:0; transition:opacity .5s; }
+.slide.active { display:flex; opacity:1; }
+.arabic-text { font-size:44px; font-weight:900; color:var(--accent2); font-family:var(--fh); margin-bottom:8px; }
+.nvidia-logo { width:90px; margin:14px 0; }
+.product-title { font-family:var(--fh); font-size:38px; font-weight:900; line-height:1.05; margin:12px 0; }
+.rtx-text { color:var(--accent2); }
+.model-number { color:var(--accent); font-size:52px; }
+.delivery-text { font-size:15px; opacity:0.85; margin-top:16px; }
+.hero-product-img { max-width:280px; height:auto; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4)); }
+.slider-btn {
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:rgba(255,255,255,0.15); border:none; color:#fff;
+    font-size:20px; padding:14px 18px; cursor:pointer;
+    border-radius:6px; transition:background .3s; z-index:10;
+}
+.slider-btn:hover { background:rgba(255,255,255,0.25); }
+.slider-btn.prev { left:16px; }
+.slider-btn.next { right:16px; }
+.slider-dots { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:10; }
+.dot { width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,0.35); cursor:pointer; transition:all .3s; }
+.dot.active { background:var(--accent); width:28px; border-radius:6px; }
+
+/* Right column */
+.hero-right { display:flex; flex-direction:column; gap:20px; }
+.accessories-banner {
+    background: linear-gradient(135deg, #4a1d6d, #7c3aed);
+    border-radius:14px; padding:28px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    color:#fff; min-height:185px; overflow:hidden; cursor:pointer;
+    transition: transform .3s;
+}
+.accessories-banner:hover { transform:scale(1.02); }
+.accessories-banner h3 { font-family:var(--fh); font-size:18px; font-weight:800; margin-bottom:12px; }
+.accessories-img { max-width:175px; border-radius:10px; }
+.hero-bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.controllers-banner { background:linear-gradient(135deg,#0369a1,#0ea5e9); }
+.laptops-banner { background:linear-gradient(135deg,#d97706,#fbbf24); }
+.small-banner {
+    border-radius:14px; padding:20px;
+    display:flex; align-items:center; justify-content:space-between;
+    color:#fff; min-height:185px; overflow:hidden; cursor:pointer;
+    transition:transform .3s;
+}
+.small-banner:hover { transform:scale(1.02); }
+.small-banner h4 { font-family:var(--fh); font-size:15px; font-weight:800; margin-bottom:10px; line-height:1.3; }
+.small-banner img { max-width:90px; }
+.shop-btn { background:#3b82f6; color:#fff; border:none; padding:9px 22px; border-radius:6px; font-weight:700; cursor:pointer; font-family:var(--ff); font-size:13px; transition:background .3s; }
+.shop-btn:hover { background:#2563eb; }
+.shop-btn-sm { background:#fff; color:#333; border:none; padding:7px 14px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:transform .2s; }
+.shop-btn-sm:hover { transform:scale(1.05); }
+
+/* ── CATEGORIES ── */
+.section { max-width:1400px; margin:0 auto; padding:40px 20px; }
+.section-title { font-family:var(--fh); font-size:26px; font-weight:800; color:var(--color); margin-bottom:26px; display:flex; align-items:center; gap:10px; }
+.section-title::after { content:''; flex:1; height:2px; background:linear-gradient(to right, var(--brand), transparent); border-radius:2px; }
+.categories-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:18px; }
+.category-card {
+    background:#fff; border-radius:14px; padding:24px 16px;
+    text-align:center; cursor:pointer;
+    box-shadow:var(--shadow); text-decoration:none; color:inherit;
+    display:block; transition:var(--transition);
+}
+.category-card:hover { transform:translateY(-5px); box-shadow:0 8px 22px rgba(0,0,0,0.13); }
+.category-card img { width:80px; height:80px; object-fit:contain; margin:0 auto 14px; display:block; }
+.category-card span { font-size:13px; color:var(--color2); font-weight:600; line-height:1.4; }
+
+/* ── PRODUCTS GRID ── */
+.products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
+
+/* Responsive */
+@media (max-width:1024px) {
+    .hero-grid { grid-template-columns:1fr; }
+    .slide { flex-direction:column; text-align:center; padding:30px 24px 70px; }
+    .hero-product-img { max-width:260px; margin-top:20px; }
+}
+@media (max-width:768px) {
+    .hero-bottom-row { grid-template-columns:1fr; }
+    .categories-grid { grid-template-columns:repeat(2,1fr); }
+    .products-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:480px) {
+    .products-grid { grid-template-columns:1fr; }
+    .accessories-banner { flex-direction:column; text-align:center; }
+    .small-banner { flex-direction:column; text-align:center; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-grid">
+        <!-- Main Slider -->
+        <div class="nvidia-banner">
+            <div class="slider-inner">
+                <div class="slide active">
+                    <div>
+                        <h2 class="arabic-text">الوحش</h2>
+                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
+                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">5080</span></h1>
+                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
+                    </div>
+                    <img src="{% static 'store/images/rtx5080.webp' %}" alt="RTX 5080" class="hero-product-img" onerror="this.style.opacity='0'">
+                </div>
+                <div class="slide">
+                    <div>
+                        <h2 class="arabic-text">القوة</h2>
+                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
+                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">4090</span></h1>
+                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
+                    </div>
+                    <img src="{% static 'store/images/rtx4090.jpg' %}" alt="RTX 4090" class="hero-product-img" onerror="this.style.opacity='0'">
+                </div>
+                <div class="slide">
+                    <div>
+                        <h2 class="arabic-text">السرعة</h2>
+                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
+                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">4080</span></h1>
+                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
+                    </div>
+                    <img src="{% static 'store/images/rtx4080.webp' %}" alt="RTX 4080" class="hero-product-img" onerror="this.style.opacity='0'">
+                </div>
+            </div>
+            <button class="slider-btn prev" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="slider-btn next" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="slider-dots">
+                <span class="dot active" onclick="goSlide(0)"></span>
+                <span class="dot" onclick="goSlide(1)"></span>
+                <span class="dot" onclick="goSlide(2)"></span>
+            </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="hero-right">
+            <a href="{% url 'home' %}#categories" class="accessories-banner" style="text-decoration:none">
+                <div>
+                    <h3>GAMING ACCESSORIES</h3>
+                    <button class="shop-btn">Shop Now</button>
+                </div>
+                <img src="{% static 'store/images/accessories.jpg' %}" alt="Gaming Accessories" class="accessories-img" onerror="this.style.display='none'">
+            </a>
+            <div class="hero-bottom-row">
+                {% for cat in categories|slice:":2" %}
+                <a href="{% url 'category' cat.slug %}" class="small-banner {% if forloop.first %}controllers-banner{% else %}laptops-banner{% endif %}" style="text-decoration:none">
+                    <div>
+                        <h4>{{ cat.name }}</h4>
+                        <button class="shop-btn-sm">SHOP NOW</button>
+                    </div>
+                    {% if cat.icon %}<img src="{{ cat.icon.url }}" alt="{{ cat.name }}">{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories -->
+<div class="section" id="categories">
+    <h2 class="section-title">Popular Categories</h2>
+    <div class="categories-grid">
+        {% for cat in categories %}
+        <a href="{% url 'category' cat.slug %}" class="category-card">
+            {% if cat.icon %}
+            <img src="{{ cat.icon.url }}" alt="{{ cat.name }}">
+            {% else %}
+            <img src="{% static 'store/images/category-default.png' %}" alt="{{ cat.name }}" onerror="this.style.display='none'">
+            {% endif %}
+            <span>{{ cat.name }}</span>
+        </a>
+        {% empty %}
+        <p style="grid-column:1/-1;text-align:center;color:#888;padding:40px">No categories yet. Add some from the dashboard!</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Products -->
+{% if featured_products %}
+<div class="section">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="products-grid">
+        {% for product in featured_products %}
+        {% include 'store/partials/product_card.html' %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Latest Products -->
+<div class="section">
+    <h2 class="section-title">Latest Products</h2>
+    <div class="products-grid">
+        {% for product in latest_products %}
+        {% include 'store/partials/product_card.html' %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentIdx = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+
+function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    currentIdx = (n + slides.length) % slides.length;
+    slides[currentIdx].classList.add('active');
+    dots[currentIdx].classList.add('active');
+}
+function changeSlide(dir) { showSlide(currentIdx + dir); }
+function goSlide(n) { showSlide(n); }
+
+// Auto-slide
+setInterval(() => changeSlide(1), 5000);
+</script>
+{% endblock %}

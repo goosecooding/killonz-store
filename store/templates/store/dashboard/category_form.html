@@ -1,0 +1,36 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}Add Category — Dashboard{% endblock %}
+{% block page_title %}Add Category{% endblock %}
+{% block nav_cats %}active{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:18px">
+    <a href="{% url 'dashboard_categories' %}" class="btn btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Categories</a>
+</div>
+<div class="form-card" style="max-width:500px">
+    <h2 style="font-family:var(--fh);font-size:1.2rem;font-weight:800;color:var(--brand);margin-bottom:24px">
+        <i class="fa-solid fa-folder-plus" style="margin-right:8px"></i>Add Category
+    </h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Category Name *</label>
+            <input type="text" name="name" placeholder="e.g. CPUs / Processors" required>
+        </div>
+        <div class="form-group">
+            <label>Category Icon (image)</label>
+            <input type="file" name="icon" accept="image/*">
+            <p class="form-hint">PNG/WebP with transparent background recommended</p>
+        </div>
+        <div class="form-group">
+            <label>Display Order</label>
+            <input type="number" name="order" value="0" min="0">
+            <p class="form-hint">Lower number = shown first</p>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px">
+            <button type="submit" class="btn btn-accent" style="padding:12px 28px"><i class="fa-solid fa-save"></i> Create Category</button>
+            <a href="{% url 'dashboard_categories' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
