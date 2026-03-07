@@ -91,10 +91,9 @@
                         </div>
                         <div class="cart-subtotal" data-label="Subtotal">{{ item.subtotal|floatformat:0 }} DA</div>
                         <div>
-                            <form method="post" action="{% url 'cart_remove' item.product.pk %}" style="display:inline">
-                                {% csrf_token %}
-                                <button type="submit" class="remove-btn" title="Remove"><i class="fa-solid fa-trash"></i></button>
-                            </form>
+                            <a href="{% url 'cart_remove' item.product.pk %}" class="remove-btn" title="Remove" onclick="return confirm('Remove this item?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
                         </div>
                     </div>
                     {% endfor %}
@@ -117,7 +116,8 @@
                 <div class="summary-total">
                     <span>Total</span>
                     <span>{{ total|floatformat:0 }} DA</span>
-                </div>
+                </div>test
+
                 <p class="summary-note"><i class="fa-solid fa-truck"></i> Delivery available to all 58 wilayas. Our team will contact you to confirm delivery details.</p>
                 <a href="{% url 'checkout' %}" class="btn btn-accent btn-full" style="margin-top:8px">
                     <i class="fa-solid fa-phone"></i> Place Order
