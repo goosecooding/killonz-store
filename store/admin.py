@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, RepairRequest
 
 
 @admin.register(Category)
@@ -28,4 +28,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer_name', 'phone', 'email', 'wilaya', 'status', 'total', 'created_at']
     list_filter = ['status']
     inlines = [OrderItemInline]
+    readonly_fields = ['created_at']
+
+@admin.register(RepairRequest)
+class RepairRequestAdmin(admin.ModelAdmin):
+    list_display = ['id', 'device_type', 'device_model', 'phone', 'location', 'status', 'created_at']
+    list_filter = ['status']
     readonly_fields = ['created_at']

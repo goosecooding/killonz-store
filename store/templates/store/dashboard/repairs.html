@@ -1,0 +1,48 @@
+{% extends 'store/dashboard/base.html' %}
+{% block title %}Repairs — Dashboard{% endblock %}
+{% block page_title %}Repairs{% endblock %}
+{% block nav_repairs %}active{% endblock %}
+
+{% block content %}
+<div class="table-card">
+    <div class="table-header">
+        <h3><i class="fa-solid fa-wrench" style="color:var(--brand);margin-right:6px"></i>All Repair Requests</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            {% for status, label in statuses %}
+            <a href="?status={{ status }}" class="btn btn-sm {% if status_filter == status %}btn-primary{% else %}btn-outline{% endif %}">{{ label }}</a>
+            {% endfor %}
+            <a href="?" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Device Type</th><th>Model</th><th>Phone</th><th>Location</th><th>Problem</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+            {% for repair in repairs %}
+            <tr>
+                <td><strong>#{{ repair.pk }}</strong></td>
+                <td>{{ repair.device_type }}</td>
+                <td>{{ repair.device_model|default:"—" }}</td>
+                <td><a href="tel:{{ repair.phone }}" style="color:var(--brand);text-decoration:none;font-weight:600">{{ repair.phone }}</a></td>
+                <td>{{ repair.location }}</td>
+                <td style="font-size:12px;color:#555;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="{{ repair.problem }}">{{ repair.problem }}</td>
+                <td>
+                    <form method="post" action="{% url 'update_repair_status' repair.pk %}">
+                        {% csrf_token %}
+                        <select name="status" onchange="this.form.submit()" style="padding:4px; border-radius:4px; border:1px solid #ccc; font-size:12px;">
+                            {% for c_status, label in statuses %}
+                                <option value="{{ c_status }}" {% if repair.status == c_status %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td style="color:#888;font-size:12px">{{ repair.created_at|date:"M d Y, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" style="text-align:center;color:#aaa;padding:50px">No repair requests found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

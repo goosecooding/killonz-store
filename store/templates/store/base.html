@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANGUAGE_CODE }}" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -175,12 +175,23 @@
     </div>
     <div class="nav-links">
         <a href="{% url 'cart' %}">
-            <i class="fa-solid fa-cart-arrow-down"></i> Cart
+            <i class="fa-solid fa-cart-arrow-down"></i> {% trans "Cart" %}
             {% if cart_count > 0 %}<span class="badge">{{ cart_count }}</span>{% endif %}
         </a>
-        <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-        <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> Contact</a>
-        <div class="hover-bg"></div>
+        <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> {% trans "Categories" %}</a>
+        <a href="{% url 'repair' %}"><i class="fa-solid fa-wrench"></i> {% trans "Repair My Device" %}</a>
+        <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> {% trans "Contact" %}</a>
+        
+        <form action="{% url 'set_language' %}" method="post" style="display:inline-block; margin-left:14px; margin-top: 3px;">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ redirect_to }}">
+            <select name="language" onchange="this.form.submit()" style="padding:4px; border-radius:4px; font-family:var(--ff); font-size: 13px;">
+                {% get_current_language as LANGUAGE_CODE %}
+                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+                <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>FR</option>
+                <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>AR</option>
+            </select>
+        </form>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -194,11 +205,22 @@
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
     </div>
-    <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-arrow-down"></i> Cart
+    <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-arrow-down"></i> {% trans "Cart" %}
         {% if cart_count > 0 %}({{ cart_count }}){% endif %}
     </a>
-    <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-    <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> Contact</a>
+    <a href="{% url 'home' %}#categories"><i class="fa-solid fa-layer-group"></i> {% trans "Categories" %}</a>
+    <a href="{% url 'repair' %}"><i class="fa-solid fa-wrench"></i> {% trans "Repair My Device" %}</a>
+    <a href="{% url 'home' %}#contact"><i class="fa-solid fa-phone"></i> {% trans "Contact" %}</a>
+    <form action="{% url 'set_language' %}" method="post" style="padding:16px 24px;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ redirect_to }}">
+        <select name="language" onchange="this.form.submit()" style="width:100%; padding:8px; border-radius:8px; border:2px solid var(--brand); font-family:var(--ff);">
+            {% get_current_language as LANGUAGE_CODE %}
+            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English (EN)</option>
+            <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>Français (FR)</option>
+            <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>العربية (AR)</option>
+        </select>
+    </form>
 </div>
 
 {% if messages %}

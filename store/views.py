@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db.models import Sum, Count, Q
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, RepairRequest
 import json
 
 
@@ -201,6 +201,35 @@ def order_success(request, order_id):
     })
 
 
+# ─── REPAIR DEVICE ─────────────────────────────────────────────────────────────
+
+def repair_request(request):
+    if request.method == 'POST':
+        device_type = request.POST.get('device_type', '').strip()
+        device_model = request.POST.get('device_model', '').strip()
+        problem = request.POST.get('problem', '').strip()
+        location = request.POST.get('location', '').strip()
+        phone = request.POST.get('phone', '').strip()
+
+        if not device_type or not problem or not phone:
+            messages.error(request, 'Device type, problem description, and phone number are required.')
+            return redirect('repair')
+
+        repair = RepairRequest.objects.create(
+            device_type=device_type,
+            device_model=device_model,
+            problem=problem,
+            location=location,
+            phone=phone
+        )
+        messages.success(request, 'Your repair request has been submitted successfully. We will contact you soon!')
+        return redirect('home')
+
+    return render(request, 'store/repair.html', {
+        'categories': Category.objects.all(),
+    })
+
+
 # ─── OWNER DASHBOARD ───────────────────────────────────────────────────────────
 
 def dashboard_login(request):
@@ -232,6 +261,10 @@ def dashboard(request):
     total_products = Product.objects.count()
     out_of_stock = Product.objects.filter(is_in_stock=False).count()
     recent_orders = Order.objects.all()[:5]
+
+    total_repairs = RepairRequest.objects.count()
+    pending_repairs = RepairRequest.objects.filter(status='pending').count()
+
     return render(request, 'store/dashboard/index.html', {
         'total_orders': total_orders,
         'pending_orders': pending_orders,
@@ -240,6 +273,8 @@ def dashboard(request):
         'total_products': total_products,
         'out_of_stock': out_of_stock,
         'recent_orders': recent_orders,
+        'total_repairs': total_repairs,
+        'pending_repairs': pending_repairs,
     })
 
 
@@ -272,6 +307,31 @@ def update_order_status(request, order_id):
         order.save()
         messages.success(request, f'Order #{order_id} status updated to {new_status}.')
     return redirect('dashboard_order_detail', order_id=order_id)
+
+
+@login_required(login_url='/dashboard/login/')
+def dashboard_repairs(request):
+    status_filter = request.GET.get('status', '')
+    repairs = RepairRequest.objects.all()
+    if status_filter:
+        repairs = repairs.filter(status=status_filter)
+    return render(request, 'store/dashboard/repairs.html', {
+        'repairs': repairs,
+        'status_filter': status_filter,
+        'statuses': RepairRequest.STATUS_CHOICES,
+    })
+
+
+@login_required(login_url='/dashboard/login/')
+@require_POST
+def update_repair_status(request, repair_id):
+    repair = get_object_or_404(RepairRequest, pk=repair_id)
+    new_status = request.POST.get('status')
+    if new_status in dict(RepairRequest.STATUS_CHOICES):
+        repair.status = new_status
+        repair.save()
+        messages.success(request, f'Repair Request #{repair_id} status updated to {new_status}.')
+    return redirect('dashboard_repairs')
 
 
 @login_required(login_url='/dashboard/login/')
