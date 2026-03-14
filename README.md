@@ -33,12 +33,12 @@ pip install -r requirements.txt
 
 ### 3. Set up the database
 ```bash
-python manage.py migrate
+python3 manage.py migrate
 ```
 
 ### 4. Run setup script (creates admin + sample products)
 ```bash
-python setup.py
+python3 setup.py
 ```
 
 ### 5. Copy your images
@@ -50,7 +50,7 @@ python setup.py
 
 ### 6. Start the server
 ```bash
-python manage.py runserver
+python3 manage.py runserver
 ```
 
 ### 7. Open in browser
@@ -139,6 +139,6 @@ For production deployment:
 1. Set `DEBUG = False` in settings.py
 2. Change `SECRET_KEY` to a random string
 3. Set `ALLOWED_HOSTS` to your domain
-4. Run `python manage.py collectstatic`
+4. Run `python3 manage.py collectstatic`
 5. Use a proper web server (Nginx + Gunicorn)
 6. Use PostgreSQL instead of SQLite

@@ -93,7 +93,6 @@ CSRF_TRUSTED_ORIGINS = ['https://web-production-23e77.up.railway.app']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Cloudinary - only loaded at runtime, not build time
 try:
     import cloudinary
     import cloudinary_storage
