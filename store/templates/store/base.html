@@ -428,17 +428,29 @@
             margin-bottom: 14px;
         }
 
-        footer p,
         footer a {
             font-size: 0.9rem;
             line-height: 1.8;
             color: #c9b8e0;
             text-decoration: none;
             display: block;
+            transition: all 0.3s ease;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #c9b8e0;
+            margin: 0;
         }
 
         footer a:hover {
             color: #fff;
+            transform: translateX(4px);
+        }
+        
+        footer a:hover i {
+            color: var(--accent);
         }
 
         .footer-bottom {
@@ -660,9 +672,9 @@
                 <select name="language" onchange="this.form.submit()"
                     style="padding:4px; border-radius:4px; font-family:var(--ff); font-size: 13px;">
                     {% get_current_language as LANGUAGE_CODE %}
-                    <option value="en" {% if LANGUAGE_CODE=='en' %}selected{% endif %}>EN</option>
-                    <option value="fr" {% if LANGUAGE_CODE=='fr' %}selected{% endif %}>FR</option>
-                    <option value="ar" {% if LANGUAGE_CODE=='ar' %}selected{% endif %}>AR</option>
+                    <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+                    <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>FR</option>
+                    <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>AR</option>
                 </select>
             </form>
         </div>
@@ -691,9 +703,9 @@
             <select name="language" onchange="this.form.submit()"
                 style="width:100%; padding:8px; border-radius:8px; border:2px solid var(--brand); font-family:var(--ff);">
                 {% get_current_language as LANGUAGE_CODE %}
-                <option value="en" {% if LANGUAGE_CODE=='en' %}selected{% endif %}>English (EN)</option>
-                <option value="fr" {% if LANGUAGE_CODE=='fr' %}selected{% endif %}>Français (FR)</option>
-                <option value="ar" {% if LANGUAGE_CODE=='ar' %}selected{% endif %}>العربية (AR)</option>
+                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English (EN)</option>
+                <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>Français (FR)</option>
+                <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>العربية (AR)</option>
             </select>
         </form>
     </div>
