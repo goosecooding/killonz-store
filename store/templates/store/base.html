@@ -448,7 +448,7 @@
             color: #fff;
             transform: translateX(4px);
         }
-        
+
         footer a:hover i {
             color: var(--accent);
         }
@@ -672,9 +672,9 @@
                 <select name="language" onchange="this.form.submit()"
                     style="padding:4px; border-radius:4px; font-family:var(--ff); font-size: 13px;">
                     {% get_current_language as LANGUAGE_CODE %}
-                    <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
-                    <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>FR</option>
-                    <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>AR</option>
+                    <option value="en" {% if LANGUAGE_CODE=='en' %}selected{% endif %}>EN</option>
+                    <option value="fr" {% if LANGUAGE_CODE=='fr' %}selected{% endif %}>FR</option>
+                    <option value="ar" {% if LANGUAGE_CODE=='ar' %}selected{% endif %}>AR</option>
                 </select>
             </form>
         </div>
@@ -703,9 +703,9 @@
             <select name="language" onchange="this.form.submit()"
                 style="width:100%; padding:8px; border-radius:8px; border:2px solid var(--brand); font-family:var(--ff);">
                 {% get_current_language as LANGUAGE_CODE %}
-                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English (EN)</option>
-                <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>Français (FR)</option>
-                <option value="ar" {% if LANGUAGE_CODE == 'ar' %}selected{% endif %}>العربية (AR)</option>
+                <option value="en" {% if LANGUAGE_CODE=='en' %}selected{% endif %}>English (EN)</option>
+                <option value="fr" {% if LANGUAGE_CODE=='fr' %}selected{% endif %}>Français (FR)</option>
+                <option value="ar" {% if LANGUAGE_CODE=='ar' %}selected{% endif %}>العربية (AR)</option>
             </select>
         </form>
     </div>
@@ -741,11 +741,12 @@
             </div>
             <div>
                 <h4>Contact Us</h4>
-                <a href="tel:+213562205790"><i class="fa-solid fa-phone" style="margin-right:8px"></i> +213 562 20 57
+                <a href="tel:+213562205790" target="_blank"><i class="fa-solid fa-phone" style="margin-right:8px"></i>
+                    +213 562 20 57
                     90</a>
-                <a href="https://www.facebook.com/share/1Dba7x17KA/"><i class="fa-brands fa-facebook"
+                <a href="https://www.facebook.com/share/1Dba7x17KA/" target="_blank"><i class="fa-brands fa-facebook"
                         style="margin-right:8px"></i> KILLONZ Store</a>
-                <a href="https://www.instagram.com/killonz.shop/"><i class="fa-brands fa-instagram"
+                <a href="https://www.instagram.com/killonz.shop/" target="_blank"><i class="fa-brands fa-instagram"
                         style="margin-right:8px"></i> @killonz.shop</a>
                 <p><i class="fa-solid fa-location-dot" style="margin-right:8px"></i> Algiers, Algeria</p>
             </div>
