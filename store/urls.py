@@ -12,6 +12,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('order/success/<int:order_id>/', views.order_success, name='order_success'),
     path('repair/', views.repair_request, name='repair'),
+    path('about/', views.about, name='about'),
 
     # Owner dashboard
     path('dashboard/', views.dashboard, name='dashboard'),

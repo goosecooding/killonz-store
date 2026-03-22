@@ -230,6 +230,14 @@ def repair_request(request):
     })
 
 
+# ─── ABOUT PAGE ────────────────────────────────────────────────────────────────
+
+def about(request):
+    return render(request, 'store/about.html', {
+        'categories': Category.objects.all(),
+    })
+
+
 # ─── OWNER DASHBOARD ───────────────────────────────────────────────────────────
 
 def dashboard_login(request):
