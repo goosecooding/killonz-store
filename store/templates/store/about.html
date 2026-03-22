@@ -12,6 +12,7 @@
         position: relative;
         overflow: hidden;
     }
+
     .about-hero::before {
         content: '';
         position: absolute;
@@ -19,13 +20,22 @@
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(118,185,0,0.08) 0%, transparent 60%);
+        background: radial-gradient(circle, rgba(118, 185, 0, 0.08) 0%, transparent 60%);
         animation: heroGlow 8s ease-in-out infinite;
     }
+
     @keyframes heroGlow {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(5%, 5%) scale(1.1); }
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(5%, 5%) scale(1.1);
+        }
     }
+
     .about-hero h1 {
         font-family: var(--fh);
         font-size: 3rem;
@@ -35,9 +45,11 @@
         position: relative;
         z-index: 1;
     }
+
     .about-hero h1 span {
         color: var(--accent);
     }
+
     .about-hero .subtitle {
         font-size: 1.15rem;
         color: #c9b8e0;
@@ -50,6 +62,7 @@
         margin: 0 auto;
         padding: 50px 24px 60px;
     }
+
     .about-card {
         background: #fff;
         border-radius: var(--radius);
@@ -58,12 +71,8 @@
         direction: rtl;
         text-align: right;
     }
-    .about-card .date-line {
-        font-size: 0.85rem;
-        color: #999;
-        margin-bottom: 6px;
-        font-family: var(--ff);
-    }
+
+
     .about-card .about-title {
         font-family: var(--fh);
         font-size: 1.6rem;
@@ -71,12 +80,14 @@
         color: var(--brand);
         margin-bottom: 24px;
     }
+
     .about-card p {
         font-size: 1rem;
         line-height: 2;
         color: var(--color2);
         margin-bottom: 18px;
     }
+
     .about-card .services-title {
         font-family: var(--fh);
         font-size: 1.2rem;
@@ -84,6 +95,7 @@
         color: var(--brand);
         margin: 28px 0 16px;
     }
+
     .about-card .services-list {
         list-style: none;
         padding: 0;
@@ -91,37 +103,43 @@
         flex-direction: column;
         gap: 14px;
     }
+
     .about-card .services-list li {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 14px 18px;
-        background: linear-gradient(135deg, rgba(43,15,63,0.04), rgba(118,185,0,0.06));
+        background: linear-gradient(135deg, rgba(43, 15, 63, 0.04), rgba(118, 185, 0, 0.06));
         border-radius: 10px;
         font-size: 0.95rem;
         color: var(--color2);
         line-height: 1.6;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .about-card .services-list li:hover {
         transform: translateX(-4px);
-        box-shadow: 0 4px 12px rgba(43,15,63,0.08);
+        box-shadow: 0 4px 12px rgba(43, 15, 63, 0.08);
     }
+
     .about-card .services-list li i {
         color: var(--accent);
         font-size: 1.1rem;
         flex-shrink: 0;
     }
+
     .about-card .closing {
         margin-top: 30px;
         padding-top: 24px;
-        border-top: 2px solid rgba(43,15,63,0.08);
+        border-top: 2px solid rgba(43, 15, 63, 0.08);
     }
+
     .about-card .closing p {
         font-weight: 600;
         color: var(--brand);
         font-size: 1.05rem;
     }
+
     .about-card .signature {
         margin-top: 16px;
         font-family: var(--fh);
@@ -131,8 +149,13 @@
     }
 
     @media (max-width: 600px) {
-        .about-hero h1 { font-size: 2rem; }
-        .about-card { padding: 28px 20px; }
+        .about-hero h1 {
+            font-size: 2rem;
+        }
+
+        .about-card {
+            padding: 28px 20px;
+        }
     }
 </style>
 {% endblock %}
@@ -145,7 +168,6 @@
 
 <section class="about-section">
     <div class="about-card">
-        <p class="date-line">Feb 9, 2026, 1:28 PM</p>
         <h2 class="about-title">About Us — Killonz Shop</h2>
 
         <p>
@@ -155,12 +177,14 @@
 
         <p>
             بديت من الصفر:<br>
-            إصلاح حواسيب الأصدقاء، تشخيص الأعطال، تجميع أجهزة، والتعلّم بالتجربة والخطأ. مع الوقت، صرت المرجع الأول لأي شخص عنده مشكلة في الكمبيوتر. ما كانش مجرد "تصليح"، كان فهم حقيقي للهاردوير والسوفتوير.
+            إصلاح حواسيب الأصدقاء، تشخيص الأعطال، تجميع أجهزة، والتعلّم بالتجربة والخطأ. مع الوقت، صرت المرجع الأول لأي
+            شخص عنده مشكلة في الكمبيوتر. ما كانش مجرد "تصليح"، كان فهم حقيقي للهاردوير والسوفتوير.
         </p>
 
         <p>
             بجانب العمل التقني، دخلت عالم صناعة المحتوى.<br>
-            أشارك تصليحات حقيقية، تجميعات، تجارب، ونصائح بدون تلميع أو كذب. كل قطعة تُباع أو تُركّب هنا، أنا جربتها أو اشتغلت بها فعليًا. المحتوى مش للمناظر — هو دليل على طريقة العمل والمصداقية.
+            أشارك تصليحات حقيقية، تجميعات، تجارب، ونصائح بدون تلميع أو كذب. كل قطعة تُباع أو تُركّب هنا، أنا جربتها أو
+            اشتغلت بها فعليًا. المحتوى مش للمناظر — هو دليل على طريقة العمل والمصداقية.
         </p>
 
         <h3 class="services-title">Killonz Shop يقدّم:</h3>
