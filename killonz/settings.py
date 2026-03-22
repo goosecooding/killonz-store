@@ -62,7 +62,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = []
 
-LANGUAGE_CODE = 'ar'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Africa/Algiers'
 USE_I18N = True
 USE_TZ = True
