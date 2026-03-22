@@ -110,40 +110,33 @@
         <!-- Main Slider -->
         <div class="nvidia-banner">
             <div class="slider-inner">
+                {% for product, title in slider_items %}
+                <div class="slide {% if forloop.first %}active{% endif %}" onclick="location.href='{% url 'product' product.slug %}'">
+                    <div>
+                        <h2 class="arabic-text">{{ title }}</h2>
+                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
+                        <h1 class="product-title">{{ product.name|truncatewords:4 }}</h1>
+                        <p class="delivery-text">{{ product.price }} DA — التوصيل 58 ولاية 🚚</p>
+                    </div>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="hero-product-img">
+                    {% endif %}
+                </div>
+                {% empty %}
                 <div class="slide active">
                     <div>
-                        <h2 class="arabic-text">الوحش</h2>
-                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
-                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">5080</span></h1>
-                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
+                        <h2 class="arabic-text">مرحبا بكم</h2>
+                        <p>لا توجد منتجات حاليا</p>
                     </div>
-                    <img src="{% static 'store/images/rtx5080.webp' %}" alt="RTX 5080" class="hero-product-img" onerror="this.style.opacity='0'">
                 </div>
-                <div class="slide">
-                    <div>
-                        <h2 class="arabic-text">القوة</h2>
-                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
-                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">4090</span></h1>
-                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
-                    </div>
-                    <img src="{% static 'store/images/rtx4090.jpg' %}" alt="RTX 4090" class="hero-product-img" onerror="this.style.opacity='0'">
-                </div>
-                <div class="slide">
-                    <div>
-                        <h2 class="arabic-text">السرعة</h2>
-                        <img src="{% static 'store/images/nvidia-logo.png' %}" alt="NVIDIA" class="nvidia-logo" onerror="this.style.display='none'">
-                        <h1 class="product-title">GEFORCE<br><span class="rtx-text">RTX</span><br><span class="model-number">4080</span></h1>
-                        <p class="delivery-text">التوصيل 58 ولاية 🚚</p>
-                    </div>
-                    <img src="{% static 'store/images/rtx4080.webp' %}" alt="RTX 4080" class="hero-product-img" onerror="this.style.opacity='0'">
-                </div>
+                {% endfor %}
             </div>
             <button class="slider-btn prev" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
             <button class="slider-btn next" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
             <div class="slider-dots">
-                <span class="dot active" onclick="goSlide(0)"></span>
-                <span class="dot" onclick="goSlide(1)"></span>
-                <span class="dot" onclick="goSlide(2)"></span>
+                {% for product, title in slider_items %}
+                <span class="dot {% if forloop.first %}active{% endif %}" onclick="goSlide({{ forloop.counter0 }})"></span>
+                {% endfor %}
             </div>
         </div>
 

@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db.models import Sum, Count, Q
 from .models import Category, Product, Order, OrderItem, RepairRequest
 import json
+import random
 
 
 # ─── CART HELPERS ──────────────────────────────────────────────────────────────
@@ -25,10 +26,28 @@ def home(request):
     categories = Category.objects.all()
     featured_products = Product.objects.filter(is_featured=True)
     latest_products = Product.objects.all()[:12]
+
+    # Slider Items: (Product, Arabic Title)
+    slider_items = []
+    all_products = Product.objects.all()
+    
+    # 1. Random Featured
+    if featured_products.exists():
+        slider_items.append((random.choice(featured_products), "الوحش"))
+    
+    # 2. Most Expensive
+    if all_products.exists():
+        slider_items.append((all_products.order_by('-price').first(), "القوة"))
+        
+    # 3. Cheapest
+    if all_products.exists():
+        slider_items.append((all_products.order_by('price').first(), "السرعة"))
+
     return render(request, 'store/home.html', {
         'categories': categories,
         'featured_products': featured_products,
         'latest_products': latest_products,
+        'slider_items': slider_items,
     })
 
 
