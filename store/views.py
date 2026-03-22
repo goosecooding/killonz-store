@@ -8,6 +8,7 @@ from django.db.models import Sum, Count, Q
 from .models import Category, Product, Order, OrderItem, RepairRequest
 import json
 import random
+from decimal import Decimal, InvalidOperation
 
 
 # ─── CART HELPERS ──────────────────────────────────────────────────────────────
@@ -403,7 +404,12 @@ def _save_product(request, product=None):
     image = request.FILES.get('image')
     name = data.get('name', '').strip()
     category = get_object_or_404(Category, pk=data.get('category'))
-    price = float(data.get('price', 0))
+    price_raw = data.get('price', '0').strip()
+    try:
+        price = Decimal(price_raw)
+    except (InvalidOperation, ValueError):
+        price = Decimal('0.00')
+
     description = data.get('description', '')
     is_in_stock = data.get('is_in_stock') == 'on'
     is_featured = data.get('is_featured') == 'on'
