@@ -86,11 +86,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            position: relative;
         }
 
         .nav-search form {
             display: flex;
             gap: 8px;
+            position: relative;
         }
 
         .nav-search input {
@@ -121,6 +123,134 @@
 
         .nav-search button i {
             color: #ccc;
+        }
+
+        /* ── SEARCH AUTOCOMPLETE DROPDOWN ── */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            width: 380px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+            border: 1px solid rgba(43,15,63,0.08);
+            z-index: 2000;
+            overflow: hidden;
+            display: none;
+        }
+
+        .search-dropdown.active {
+            display: block;
+            animation: dropIn .18s ease;
+        }
+
+        @keyframes dropIn {
+            from { opacity:0; transform:translateY(-6px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--color);
+            transition: background .15s;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .search-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-item:hover {
+            background: rgba(43,15,63,0.05);
+        }
+
+        .search-item img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f5f5f5;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        .search-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-item-name {
+            font-family: var(--fh);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-item-meta {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .search-item-price {
+            font-family: var(--fh);
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--brand);
+            white-space: nowrap;
+        }
+
+        .search-no-result {
+            padding: 24px 16px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .search-no-result i {
+            display: block;
+            font-size: 1.8rem;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .search-footer {
+            padding: 10px 16px;
+            background: rgba(43,15,63,0.03);
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--brand);
+            font-weight: 600;
+            cursor: pointer;
+            border-top: 1px solid rgba(43,15,63,0.08);
+            transition: background .15s;
+        }
+
+        .search-footer:hover {
+            background: rgba(43,15,63,0.08);
+        }
+
+        .search-out-badge {
+            font-size: 10px;
+            background: #fee;
+            color: #e53e3e;
+            border-radius: 4px;
+            padding: 1px 6px;
+            margin-left: 4px;
+            font-weight: 600;
         }
 
         .nav-links {
@@ -650,10 +780,15 @@
             <span>KILLONZ</span>
         </a>
         <div class="nav-search">
-            <form method="get" action="{% url 'home' %}">
-                <input type="text" name="q" placeholder="Search for any products..." value="{{ request.GET.q }}">
-                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </form>
+            <div class="search-wrapper" id="desktopSearchWrapper">
+                <form method="get" action="{% url 'search' %}" id="desktopSearchForm" autocomplete="off">
+                    <input type="text" name="q" id="desktopSearchInput"
+                        placeholder="{% trans 'Search for any products...' %}"
+                        value="{{ request.GET.q }}">
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <div class="search-dropdown" id="desktopDropdown"></div>
+            </div>
         </div>
         <div class="nav-links">
             <a href="{% url 'cart' %}">
@@ -685,10 +820,14 @@
 
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-search">
-            <form method="get" action="{% url 'home' %}">
-                <input type="text" name="q" placeholder="Search for any products...">
-                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </form>
+            <div class="search-wrapper" id="mobileSearchWrapper" style="width:100%;">
+                <form method="get" action="{% url 'search' %}" id="mobileSearchForm" autocomplete="off" style="width:100%;">
+                    <input type="text" name="q" id="mobileSearchInput"
+                        placeholder="{% trans 'Search for any products...' %}" style="width:100%;">
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <div class="search-dropdown" id="mobileDropdown" style="width:100%;"></div>
+            </div>
         </div>
         <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-arrow-down"></i> {% trans "Cart" %}
             {% if cart_count > 0 %}({{ cart_count }}){% endif %}
@@ -748,23 +887,34 @@
                         style="margin-right:8px"></i> KILLONZ Store</a>
                 <a href="https://www.instagram.com/killonz.shop/" target="_blank"><i class="fa-brands fa-instagram"
                         style="margin-right:8px"></i> @killonz.shop</a>
-                <p><i class="fa-solid fa-location-dot" style="margin-right:8px"></i> Algiers, Algeria</p>
+                <p><i class="fa-solid fa-location-dot" style="margin-right:8px"></i> Ghardaia, Algeria</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 KILLONZ Store. All rights reserved.</p>
+            <p>&copy; 2026 KILLONZ Store. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Hamburger
+        // ── i18n strings for JS (translated server-side) ──
+        const SEARCH_I18N = {
+            notAvailable: "{% trans 'This product is not available' %}",
+            noMatch: "{% trans 'No products matched your search.' %}",
+            seeAll: "{% trans 'See all results' %}",
+            outOfStock: "{% trans 'Out of stock' %}",
+        };
+        const SEARCH_API_URL = "{% url 'search_api' %}";
+        const SEARCH_PAGE_URL = "{% url 'search' %}";
+
+        // ── Hamburger ──
         const ham = document.getElementById('hamburger');
         const mob = document.getElementById('mobileMenu');
         ham?.addEventListener('click', () => {
             ham.classList.toggle('open');
             mob.classList.toggle('open');
         });
-        // Auto-dismiss messages
+
+        // ── Auto-dismiss messages ──
         setTimeout(() => {
             document.querySelectorAll('.message').forEach(m => {
                 m.style.transition = 'opacity .5s';
@@ -772,6 +922,92 @@
                 setTimeout(() => m.remove(), 500);
             });
         }, 4000);
+
+        // ── Live Search Autocomplete ──
+        function buildDropdown(results, query, dropdownEl, formEl) {
+            dropdownEl.innerHTML = '';
+
+            if (results.length === 0) {
+                dropdownEl.innerHTML = `
+                    <div class="search-no-result">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <strong>${SEARCH_I18N.notAvailable}</strong>
+                        <p style="margin-top:4px; font-size:0.82rem;">${SEARCH_I18N.noMatch}</p>
+                    </div>`;
+                dropdownEl.classList.add('active');
+                return;
+            }
+
+            results.forEach(p => {
+                const imgSrc = p.image || '/static/store/images/logo.jpg';
+                const outBadge = p.is_in_stock ? '' : `<span class="search-out-badge">${SEARCH_I18N.outOfStock}</span>`;
+                const item = document.createElement('a');
+                item.className = 'search-item';
+                item.href = p.url;
+                item.innerHTML = `
+                    <img src="${imgSrc}" alt="${p.name}" onerror="this.src='/static/store/images/logo.jpg'">
+                    <div class="search-item-info">
+                        <div class="search-item-name">${p.name}${outBadge}</div>
+                        <div class="search-item-meta">${p.category}</div>
+                    </div>
+                    <div class="search-item-price">${p.price} DA</div>`;
+                dropdownEl.appendChild(item);
+            });
+
+            // "See all results" footer
+            const footer = document.createElement('div');
+            footer.className = 'search-footer';
+            footer.innerHTML = `<i class="fa-solid fa-arrow-right" style="margin-right:6px;"></i>${SEARCH_I18N.seeAll}`;
+            footer.addEventListener('click', () => {
+                window.location.href = `${SEARCH_PAGE_URL}?q=${encodeURIComponent(query)}`;
+            });
+            dropdownEl.appendChild(footer);
+            dropdownEl.classList.add('active');
+        }
+
+        function setupSearch(inputId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            if (!input || !dropdown) return;
+
+            let debounceTimer = null;
+
+            input.addEventListener('input', () => {
+                const q = input.value.trim();
+                clearTimeout(debounceTimer);
+
+                if (q.length === 0) {
+                    dropdown.classList.remove('active');
+                    dropdown.innerHTML = '';
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`${SEARCH_API_URL}?q=${encodeURIComponent(q)}`)
+                        .then(r => r.json())
+                        .then(data => buildDropdown(data.results, q, dropdown, input.closest('form')))
+                        .catch(() => { dropdown.classList.remove('active'); });
+                }, 200);
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!input.closest('.search-wrapper').contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Navigate with keyboard
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    dropdown.classList.remove('active');
+                    input.blur();
+                }
+            });
+        }
+
+        setupSearch('desktopSearchInput', 'desktopDropdown');
+        setupSearch('mobileSearchInput', 'mobileDropdown');
     </script>
     {% block extra_js %}{% endblock %}
 </body>

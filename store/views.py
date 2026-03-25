@@ -52,6 +52,55 @@ def home(request):
     })
 
 
+def search(request):
+    """Full-page search results view."""
+    q = request.GET.get('q', '').strip()
+    products = []
+    if q:
+        products = Product.objects.filter(
+            Q(name__icontains=q) | Q(description__icontains=q) | Q(category__name__icontains=q)
+        ).select_related('category')
+    return render(request, 'store/search.html', {
+        'q': q,
+        'products': products,
+        'categories': Category.objects.all(),
+    })
+
+
+def search_api(request):
+    """Live search JSON API – returns products whose name starts with or contains the query."""
+    q = request.GET.get('q', '').strip()
+    if not q:
+        return JsonResponse({'results': []})
+
+    # Products whose name starts with the query come first, then general contains
+    starts = Product.objects.filter(name__istartswith=q).select_related('category')
+    contains = Product.objects.filter(name__icontains=q).exclude(
+        pk__in=starts.values_list('pk', flat=True)
+    ).select_related('category')
+
+    starts_list = list(starts[:10])
+    remaining = 10 - len(starts_list)
+    contains_list = list(contains[:remaining]) if remaining > 0 else []
+    combined = (starts_list + contains_list)[:10]
+
+    results = []
+    for p in combined:
+        results.append({
+            'id': p.pk,
+            'name': p.name,
+            'category': p.category.name,
+            'price': str(p.price),
+            'is_in_stock': p.is_in_stock,
+            'url': f'/product/{p.slug}/',
+            'image': p.image.url if p.image else '',
+        })
+
+    return JsonResponse({'results': results, 'total': Product.objects.filter(
+        Q(name__icontains=q) | Q(description__icontains=q)
+    ).count()})
+
+
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     all_categories = Category.objects.all()

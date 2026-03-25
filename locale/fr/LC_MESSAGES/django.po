@@ -47,6 +47,45 @@ msgstr "Réparer mon appareil"
 msgid "Contact"
 msgstr "Contact"
 
+msgid "About"
+msgstr "À propos"
+
+msgid "Search for any products..."
+msgstr "Rechercher des produits..."
+
+msgid "This product is not available"
+msgstr "Ce produit n'est pas disponible"
+
+msgid "No products matched your search."
+msgstr "Aucun produit ne correspond à votre recherche."
+
+msgid "See all results"
+msgstr "Voir tous les résultats"
+
+msgid "Out of stock"
+msgstr "Rupture de stock"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Results for \"%(query)s\""
+msgstr "Résultats pour \"%(query)s\""
+
+msgid "product(s) found"
+msgstr "produit(s) trouvé(s)"
+
+msgid "We couldn't find any products matching \"%(query)s\". Try a different search term."
+msgstr "Aucun produit ne correspond à \"%(query)s\". Essayez un autre terme de recherche."
+
+msgid "Back to Home"
+msgstr "Retour à l'accueil"
+
+msgid "Type something to search for products."
+msgstr "Tapez quelque chose pour rechercher des produits."
+
+msgid "Search Products"
+msgstr "Rechercher des produits"
+
 #: store/templates/store/repair.html:46
 msgid ""
 "Have a broken device? Fill in the details below with your problem and "
