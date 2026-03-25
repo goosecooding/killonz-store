@@ -151,7 +151,7 @@
             </a>
             <div class="hero-bottom-row">
                 {% for cat in categories|slice:":2" %}
-                <a hre`f="{% url 'category' cat.slug %}" class="small-banner {% if forloop.first %}controllers-banner{% else %}laptops-banner{% endif %}" style="text-decoration:none">
+                <a href="{% url 'category' cat.slug %}" class="small-banner {% if forloop.first %}controllers-banner{% else %}laptops-banner{% endif %}" style="text-decoration:none">
                     <div>
                         <h4>{{ cat.name }}</h4>
                         <button class="shop-btn-sm">SHOP NOW</button>
