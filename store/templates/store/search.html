@@ -26,7 +26,7 @@
         box-shadow:var(--shadow); text-align:center; gap:16px;">
         <i class="fa-solid fa-magnifying-glass" style="font-size:3rem; color:#ccc;"></i>
         <h2 style="font-family:var(--fh); font-size:1.3rem; color:var(--color); font-weight:700;">
-            {% trans "This product is not available" %}
+            {% blocktrans with query=q %}there is no product called "{{ query }}"{% endblocktrans %}
         </h2>
         <p style="color:#888; font-size:0.95rem; max-width:360px;">
             {% blocktrans with query=q %}We couldn't find any products matching "{{ query }}". Try a different search term.{% endblocktrans %}

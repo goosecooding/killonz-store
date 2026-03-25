@@ -900,7 +900,6 @@
         const SEARCH_I18N = {
             notAvailable: "{% trans 'This product is not available' %}",
             noMatch: "{% trans 'No products matched your search.' %}",
-            seeAll: "{% trans 'See all results' %}",
             outOfStock: "{% trans 'Out of stock' %}",
         };
         const SEARCH_API_URL = "{% url 'search_api' %}";
@@ -954,14 +953,6 @@
                 dropdownEl.appendChild(item);
             });
 
-            // "See all results" footer
-            const footer = document.createElement('div');
-            footer.className = 'search-footer';
-            footer.innerHTML = `<i class="fa-solid fa-arrow-right" style="margin-right:6px;"></i>${SEARCH_I18N.seeAll}`;
-            footer.addEventListener('click', () => {
-                window.location.href = `${SEARCH_PAGE_URL}?q=${encodeURIComponent(query)}`;
-            });
-            dropdownEl.appendChild(footer);
             dropdownEl.classList.add('active');
         }
 

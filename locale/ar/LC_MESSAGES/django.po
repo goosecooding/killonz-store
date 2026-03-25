@@ -57,6 +57,9 @@ msgstr "ابحث عن أي منتج..."
 msgid "This product is not available"
 msgstr "هذا المنتج غير متوفر"
 
+msgid "there is no product called \"%(query)s\""
+msgstr "لا يوجد منتج باسم \"%(query)s\""
+
 msgid "No products matched your search."
 msgstr "لم يتم العثور على منتجات مطابقة."
 
