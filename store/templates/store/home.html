@@ -147,11 +147,11 @@
                     <h3>GAMING ACCESSORIES</h3>
                     <button class="shop-btn">Shop Now</button>
                 </div>
-                <img src="{% static 'store/images/accessories.jpg' %}" alt="Gaming Accessories" class="accessories-img" onerror="this.style.display='none'">
+                <img src="{% static 'store/images/accessories.webp' %}" alt="Gaming Accessories" class="accessories-img" onerror="this.style.display='none'">
             </a>
             <div class="hero-bottom-row">
                 {% for cat in categories|slice:":2" %}
-                <a href="{% url 'category' cat.slug %}" class="small-banner {% if forloop.first %}controllers-banner{% else %}laptops-banner{% endif %}" style="text-decoration:none">
+                <a hre`f="{% url 'category' cat.slug %}" class="small-banner {% if forloop.first %}controllers-banner{% else %}laptops-banner{% endif %}" style="text-decoration:none">
                     <div>
                         <h4>{{ cat.name }}</h4>
                         <button class="shop-btn-sm">SHOP NOW</button>
