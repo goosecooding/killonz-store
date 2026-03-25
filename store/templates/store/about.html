@@ -4,11 +4,32 @@
 {% block title %}About Us — KILLONZ Shop{% endblock %}
 
 {% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 <style>
+    /* ─── OVERRIDES FOR DARK ABOUT PAGE ─────────────────── */
+    body {
+        background: #050008;
+        color: white;
+    }
+
+    /* Make the main wrapper transparent so dark bg shows */
+    .main {
+        background: transparent;
+    }
+
+    :root {
+        --about-primary: #ff6f61;
+        --about-secondary: #4a90e2;
+        --about-text-dim: hsl(0, 0%, 70%);
+    }
+
+    /* ─── HERO ─────────────────────────────────────── */
     .about-hero {
-        background: linear-gradient(135deg, var(--brand) 0%, #1a0a2e 100%);
-        padding: 80px 24px 60px;
-        text-align: center;
+        min-height: 100vh;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: flex-start;
+        padding: 10rem 8vw 4rem;
+        background: linear-gradient(to bottom, #2b0f3f, #120018, #050008);
         position: relative;
         overflow: hidden;
     }
@@ -16,195 +37,574 @@
     .about-hero::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(118, 185, 0, 0.08) 0%, transparent 60%);
-        animation: heroGlow 8s ease-in-out infinite;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(74,144,226,0.15) 0%, transparent 70%);
+        top: -100px; right: -100px;
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    @keyframes heroGlow {
-
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-        }
-
-        50% {
-            transform: translate(5%, 5%) scale(1.1);
-        }
+    .about-hero::after {
+        content: '';
+        position: absolute;
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(255,111,97,0.1) 0%, transparent 70%);
+        bottom: 0; left: 5%;
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    .about-hero h1 {
-        font-family: var(--fh);
-        font-size: 3rem;
-        font-weight: 900;
-        color: #fff;
-        margin-bottom: 12px;
+    .hero-tag {
+        font-size: .8rem; letter-spacing: 4px; text-transform: uppercase;
+        color: var(--about-secondary); font-weight: 600;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+    }
+
+    .about-hero-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(4.5rem, 15vw, 11rem);
+        font-weight: 700;
+        line-height: .9;
+        text-transform: uppercase;
+        letter-spacing: -2px;
+    }
+
+    .about-hero-title .outline {
+        -webkit-text-stroke: 2px rgba(255,255,255,0.2);
+        color: transparent;
+        transition: all .4s ease;
+    }
+
+    .about-hero-title .outline:hover {
+        -webkit-text-stroke: 2px var(--about-secondary);
+        color: var(--about-secondary);
+        text-shadow: 0 0 30px var(--about-secondary);
+    }
+
+    .hero-line { display: block; overflow: hidden; }
+    .hero-line span { display: block; transform: translateY(120%); }
+
+    .hero-scroll-hint {
+        margin-top: 3.5rem;
+        display: flex; align-items: center; gap: 1rem;
+        opacity: 0;
+        color: var(--about-text-dim);
+        font-size: .85rem;
+    }
+
+    .scroll-line {
+        width: 50px; height: 1px;
+        background: var(--about-text-dim);
+        transform-origin: left;
+        transform: scaleX(0);
+    }
+
+    /* ─── MARQUEE ──────────────────────────────────── */
+    .marquee-wrap {
+        background: #0b0b0f;
+        padding: 1.5rem 0;
+        overflow: hidden;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .marquee-track {
+        display: flex; gap: 2.5rem;
+        white-space: nowrap;
+        animation: marquee 20s linear infinite;
+    }
+
+    .marquee-track span {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: rgba(255,255,255,0.25);
+    }
+
+    .marquee-track span.accent { color: var(--about-primary); }
+
+    @keyframes marquee {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    /* ─── INTRO STRIP ──────────────────────────────── */
+    .intro-strip {
+        background: #0b0b0f;
+        padding: 5rem 8vw;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .intro-strip-label {
+        font-size: .7rem; letter-spacing: 5px; text-transform: uppercase;
+        color: var(--about-primary); margin-bottom: 1rem;
+    }
+
+    .intro-strip h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        color: white;
+    }
+
+    .intro-strip h2 span { color: var(--about-secondary); }
+
+    .intro-strip p {
+        color: var(--about-text-dim);
+        font-size: 1rem;
+        line-height: 1.85;
+    }
+
+    .big-quote {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(4rem, 9vw, 7rem);
+        font-weight: 700;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+        line-height: 1;
+        text-transform: uppercase;
+        user-select: none;
+    }
+
+    /* ─── STORY TIMELINE ───────────────────────────── */
+    .story-section {
+        padding: 7rem 8vw;
+        background: linear-gradient(to bottom, #0b0b0f, #050008);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .section-header .tag {
+        font-size: .7rem; letter-spacing: 5px; text-transform: uppercase;
+        color: var(--about-secondary); display: block; margin-bottom: 1rem;
+    }
+
+    .section-header h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(2.2rem, 5vw, 4.5rem);
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 1;
+        color: white;
+    }
+
+    .section-header h2 span { color: var(--about-primary); }
+
+    .timeline {
         position: relative;
-        z-index: 1;
-    }
-
-    .about-hero h1 span {
-        color: var(--accent);
-    }
-
-    .about-hero .subtitle {
-        font-size: 1.15rem;
-        color: #c9b8e0;
-        position: relative;
-        z-index: 1;
-    }
-
-    .about-section {
         max-width: 900px;
         margin: 0 auto;
-        padding: 50px 24px 60px;
     }
 
-    .about-card {
-        background: #fff;
-        border-radius: var(--radius);
-        padding: 40px 36px;
-        box-shadow: var(--shadow);
-        direction: rtl;
-        text-align: right;
+    .timeline::before {
+        content: '';
+        position: absolute;
+        right: 50%; top: 0; bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent, rgba(74,144,226,0.4), transparent);
+        transform: translateX(50%);
     }
 
-
-    .about-card .about-title {
-        font-family: var(--fh);
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: var(--brand);
-        margin-bottom: 24px;
-    }
-
-    .about-card p {
-        font-size: 1rem;
-        line-height: 2;
-        color: var(--color2);
-        margin-bottom: 18px;
-    }
-
-    .about-card .services-title {
-        font-family: var(--fh);
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--brand);
-        margin: 28px 0 16px;
-    }
-
-    .about-card .services-list {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    .about-card .services-list li {
-        display: flex;
+    .tl-item {
+        display: grid;
+        grid-template-columns: 1fr 60px 1fr;
+        margin-bottom: 4.5rem;
         align-items: center;
-        gap: 12px;
-        padding: 14px 18px;
-        background: linear-gradient(135deg, rgba(43, 15, 63, 0.04), rgba(118, 185, 0, 0.06));
-        border-radius: 10px;
-        font-size: 0.95rem;
-        color: var(--color2);
-        line-height: 1.6;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .about-card .services-list li:hover {
-        transform: translateX(-4px);
-        box-shadow: 0 4px 12px rgba(43, 15, 63, 0.08);
+    .tl-item:nth-child(odd)  .tl-content { grid-column: 1; text-align: right; padding-right: 2rem; }
+    .tl-item:nth-child(odd)  .tl-empty   { grid-column: 3; }
+    .tl-item:nth-child(even) .tl-content { grid-column: 3; text-align: left;  padding-left: 2rem; }
+    .tl-item:nth-child(even) .tl-empty   { grid-column: 1; }
+
+    .tl-dot {
+        grid-column: 2;
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: var(--about-secondary);
+        box-shadow: 0 0 20px var(--about-secondary);
+        justify-self: center;
+        position: relative;
     }
 
-    .about-card .services-list li i {
-        color: var(--accent);
-        font-size: 1.1rem;
+    .tl-dot::after {
+        content: '';
+        position: absolute; inset: -5px;
+        border-radius: 50%;
+        border: 1px solid rgba(74,144,226,0.3);
+    }
+
+    .tl-content h3 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.3rem;
+        margin-bottom: .5rem;
+        color: white;
+    }
+
+    .tl-content p { color: var(--about-text-dim); font-size: .9rem; line-height: 1.7; }
+
+    /* ─── SERVICES ─────────────────────────────────── */
+    .services-section {
+        padding: 7rem 8vw;
+        background: #0b0b0f;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 4rem;
+    }
+
+    .service-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 20px;
+        padding: 2.2rem 1.8rem;
+        position: relative;
+        overflow: hidden;
+        transition: border-color .3s ease, transform .3s ease;
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(74,144,226,0.06) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity .3s ease;
+    }
+
+    .service-card:hover { border-color: rgba(74,144,226,0.35); transform: translateY(-6px); }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-num {
+        font-family: 'Oswald', sans-serif;
+        font-size: 3rem; font-weight: 700;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(74,144,226,0.25);
+        line-height: 1; margin-bottom: 1rem;
+    }
+
+    .service-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .65rem; color: white; }
+    .service-card p  { color: var(--about-text-dim); font-size: .88rem; line-height: 1.65; }
+
+    /* ─── SIGNATURE ────────────────────────────────── */
+    .signature-section {
+        padding: 9rem 8vw;
+        background: linear-gradient(to bottom, #2b0f3f, #120018, #050008);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sig-bg-text {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(6rem, 20vw, 18rem);
+        font-weight: 700;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.03);
+        white-space: nowrap;
+        pointer-events: none;
+        text-transform: uppercase;
+        user-select: none;
+    }
+
+    .sig-content { position: relative; z-index: 1; }
+
+    .sig-content .tag {
+        font-size: .7rem; letter-spacing: 5px; text-transform: uppercase;
+        color: var(--about-primary); display: block; margin-bottom: 2rem;
+    }
+
+    .sig-quote {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+        font-weight: 600;
+        line-height: 1.35;
+        max-width: 780px;
+        margin: 0 auto 3rem;
+        color: white;
+    }
+
+    .sig-quote em { font-style: normal; color: var(--about-secondary); }
+
+    .sig-author {
+        display: inline-flex; align-items: center; gap: 1rem;
+        padding: .9rem 2.2rem;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50px;
+        backdrop-filter: blur(6px);
+        color: var(--about-text-dim);
+        font-size: .95rem;
+    }
+
+    .sig-author .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--about-primary);
+        box-shadow: 0 0 10px var(--about-primary);
+        animation: aboutPulse 2s ease-in-out infinite;
         flex-shrink: 0;
     }
 
-    .about-card .closing {
-        margin-top: 30px;
-        padding-top: 24px;
-        border-top: 2px solid rgba(43, 15, 63, 0.08);
+    @keyframes aboutPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: .5; transform: scale(1.4); }
     }
 
-    .about-card .closing p {
-        font-weight: 600;
-        color: var(--brand);
-        font-size: 1.05rem;
-    }
+    /* ─── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 768px) {
+        .about-hero { padding: 8rem 6vw 3.5rem; }
+        .about-hero::before { width: 280px; height: 280px; top: -40px; right: -40px; }
+        .about-hero::after  { width: 180px; height: 180px; }
+        .about-hero-title   { letter-spacing: -1px; }
+        .hero-scroll-hint   { margin-top: 2.5rem; }
 
-    .about-card .signature {
-        margin-top: 16px;
-        font-family: var(--fh);
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--accent);
-    }
-
-    @media (max-width: 600px) {
-        .about-hero h1 {
-            font-size: 2rem;
+        .intro-strip {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 4rem 6vw;
         }
 
-        .about-card {
-            padding: 28px 20px;
+        .intro-right { display: none; }
+
+        .story-section { padding: 5rem 6vw; }
+        .section-header { margin-bottom: 3.5rem; }
+
+        .timeline::before {
+            right: auto; left: 6px;
+            transform: none;
         }
+
+        .tl-item {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tl-item .tl-empty { display: none; }
+
+        .tl-item .tl-dot {
+            grid-column: unset;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .tl-item:nth-child(odd)  .tl-content,
+        .tl-item:nth-child(even) .tl-content {
+            grid-column: unset;
+            text-align: right;
+            padding: 0;
+            flex: 1;
+        }
+
+        .services-section { padding: 5rem 6vw; }
+        .services-grid    { grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .signature-section { padding: 6rem 6vw; }
+        .sig-bg-text       { font-size: clamp(4rem, 22vw, 7rem); }
+        .sig-author        { padding: .75rem 1.4rem; font-size: .85rem; }
+    }
+
+    @media (max-width: 480px) {
+        .services-grid  { grid-template-columns: 1fr; }
+        .service-card   { padding: 1.8rem 1.4rem; }
+        .about-hero-title { letter-spacing: -.5px; }
+        .sig-quote      { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+        .intro-strip    { padding: 3.5rem 5vw; }
+        .services-section { padding: 4rem 5vw; }
+        .story-section  { padding: 4rem 5vw; }
     }
 </style>
 {% endblock %}
 
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero
+    const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    heroTl
+        .to('.hero-line span',   { y: 0, duration: 1.2, stagger: 0.15, delay: 0.3 })
+        .to('.hero-tag',         { opacity: 1, duration: 1 }, '-=1.1')
+        .to('.scroll-line',      { scaleX: 1, duration: 1, ease: 'power2.out' }, '-=0.5')
+        .to('.hero-scroll-hint', { opacity: 1, duration: .5 }, '-=0.5');
+
+    // Intro
+    gsap.from('.intro-left',  { scrollTrigger: { trigger: '.intro-strip', start: 'top 78%' }, x: -80, opacity: 0, duration: 1.2, ease: 'power3.out' });
+    gsap.from('.intro-right', { scrollTrigger: { trigger: '.intro-strip', start: 'top 78%' }, x: 80,  opacity: 0, duration: 1.2, ease: 'power3.out', delay: .15 });
+
+    // Section headers
+    gsap.utils.toArray('.section-header').forEach(el => {
+        gsap.from(el, { scrollTrigger: { trigger: el, start: 'top 82%' }, y: 50, opacity: 0, duration: 1, ease: 'power3.out' });
+    });
+
+    // Timeline
+    const isMobile = window.innerWidth <= 768;
+    gsap.utils.toArray('.tl-item').forEach((item, i) => {
+        const content = item.querySelector('.tl-content');
+        const dot     = item.querySelector('.tl-dot');
+        gsap.from(dot, { scrollTrigger: { trigger: item, start: 'top 84%' }, scale: 0, opacity: 0, duration: .6, ease: 'back.out(1.7)' });
+        gsap.from(content, {
+            scrollTrigger: { trigger: item, start: 'top 84%' },
+            x: isMobile ? 0 : (i % 2 === 0 ? -60 : 60),
+            y: isMobile ? 25 : 0,
+            opacity: 0, duration: 1, ease: 'power3.out', delay: .15
+        });
+    });
+
+    // Service cards
+    gsap.from('.service-card', { scrollTrigger: { trigger: '.services-grid', start: 'top 78%' }, y: 60, opacity: 0, duration: .9, stagger: .1, ease: 'power3.out' });
+
+    // Signature
+    gsap.from('.sig-quote',  { scrollTrigger: { trigger: '.signature-section', start: 'top 72%' }, y: 50, opacity: 0, duration: 1.2, ease: 'power3.out' });
+    gsap.from('.sig-author', { scrollTrigger: { trigger: '.signature-section', start: 'top 72%' }, scale: .85, opacity: 0, duration: 1, ease: 'back.out(1.4)', delay: .3 });
+    gsap.to('.sig-bg-text',  { scrollTrigger: { trigger: '.signature-section', start: 'top bottom', end: 'bottom top', scrub: true }, x: -100, ease: 'none' });
+</script>
+{% endblock %}
+
 {% block content %}
+
+<!-- HERO -->
 <section class="about-hero">
-    <h1>About Us — <span>Killonz</span> Shop</h1>
-    <p class="subtitle">خبرة، محتوى، واسم يتحط عليه الثقة</p>
+    <p class="hero-tag">من نحن</p>
+    <h1 class="about-hero-title">
+        <span class="hero-line"><span>KILLONZ</span></span>
+        <span class="hero-line"><span class="outline">SHOP</span></span>
+    </h1>
+    <div class="hero-scroll-hint">
+        <div class="scroll-line"></div>
+        <span>اسكرول للاستكشاف</span>
+    </div>
 </section>
 
-<section class="about-section">
-    <div class="about-card">
-        <h2 class="about-title">About Us — Killonz Shop</h2>
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+    <div class="marquee-track">
+        <span>Hardware</span><span class="accent">✦</span>
+        <span>Software</span><span class="accent">✦</span>
+        <span>PC Builds</span><span class="accent">✦</span>
+        <span>Repairs</span><span class="accent">✦</span>
+        <span>Content</span><span class="accent">✦</span>
+        <span>Upgrades</span><span class="accent">✦</span>
+        <span>Trust</span><span class="accent">✦</span>
+        <span>Hardware</span><span class="accent">✦</span>
+        <span>Software</span><span class="accent">✦</span>
+        <span>PC Builds</span><span class="accent">✦</span>
+        <span>Repairs</span><span class="accent">✦</span>
+        <span>Content</span><span class="accent">✦</span>
+        <span>Upgrades</span><span class="accent">✦</span>
+        <span>Trust</span><span class="accent">✦</span>
+    </div>
+</div>
 
+<!-- INTRO -->
+<section class="intro-strip">
+    <div class="intro-left">
+        <p class="intro-strip-label">البداية</p>
+        <h2>رحلة بدأت<br>قبل <span>المحل</span></h2>
         <p>
-            Killonz Shop هو امتداد لرحلة بدأت قبل ما يكون في محل أو صفحة.<br>
+            Killonz Shop هو امتداد لرحلة بدأت قبل ما يكون في محل أو صفحة.
             أنا Killonz (أمين) — صانع محتوى تقني، مصلّح حواسيب، ومهووس بكل ما له علاقة بالـ PCs.
         </p>
+    </div>
+    <div class="intro-right">
+        <p class="big-quote">PC<br>NERD</p>
+    </div>
+</section>
 
-        <p>
-            بديت من الصفر:<br>
-            إصلاح حواسيب الأصدقاء، تشخيص الأعطال، تجميع أجهزة، والتعلّم بالتجربة والخطأ. مع الوقت، صرت المرجع الأول لأي
-            شخص عنده مشكلة في الكمبيوتر. ما كانش مجرد "تصليح"، كان فهم حقيقي للهاردوير والسوفتوير.
-        </p>
-
-        <p>
-            بجانب العمل التقني، دخلت عالم صناعة المحتوى.<br>
-            أشارك تصليحات حقيقية، تجميعات، تجارب، ونصائح بدون تلميع أو كذب. كل قطعة تُباع أو تُركّب هنا، أنا جربتها أو
-            اشتغلت بها فعليًا. المحتوى مش للمناظر — هو دليل على طريقة العمل والمصداقية.
-        </p>
-
-        <h3 class="services-title">Killonz Shop يقدّم:</h3>
-        <ul class="services-list">
-            <li><i class="fa-solid fa-screwdriver-wrench"></i> إصلاح لابتوبات وأجهزة كمبيوتر (هاردوير + سوفتوير)</li>
-            <li><i class="fa-solid fa-microchip"></i> ترقيات أداء وتجميعات مخصّصة</li>
-            <li><i class="fa-solid fa-computer"></i> بيع أجهزة وملحقات مختارة بعناية</li>
-            <li><i class="fa-solid fa-tag"></i> أسعار واضحة بدون تحايل</li>
-            <li><i class="fa-solid fa-comments"></i> شرح صريح لكل خطوة</li>
-        </ul>
-
-        <div class="closing">
-            <p>
-                هذا المحل موجه للناس اللي تحب تفهم، اللي تحب الجودة، واللي تحب تتعامل مع شخص مسؤول عن كلامه وشغله.
-            </p>
-            <p style="margin-top: 14px;">
-                مش مجرد Shop — هذه خبرة، محتوى، واسم يتحط عليه الثقة.
-            </p>
-            <p class="signature">— Killonz</p>
+<!-- TIMELINE -->
+<section class="story-section">
+    <div class="section-header">
+        <span class="tag">المسيرة</span>
+        <h2>كيف <span>وصلنا</span> هنا</h2>
+    </div>
+    <div class="timeline">
+        <div class="tl-item">
+            <div class="tl-content"><h3>بداية من الصفر</h3><p>إصلاح حواسيب الأصدقاء، تشخيص الأعطال، تجميع أجهزة، والتعلّم بالتجربة والخطأ.</p></div>
+            <div class="tl-dot"></div>
+            <div class="tl-empty"></div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-empty"></div>
+            <div class="tl-dot"></div>
+            <div class="tl-content"><h3>المرجع الأول</h3><p>مع الوقت صرت المرجع الأول لأي شخص عنده مشكلة في الكمبيوتر — مش مجرد تصليح، بل فهم حقيقي للهاردوير والسوفتوير.</p></div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-content"><h3>صناعة المحتوى</h3><p>دخلت عالم صناعة المحتوى. أشارك تصليحات حقيقية، تجميعات، تجارب، ونصائح بدون تلميع أو كذب.</p></div>
+            <div class="tl-dot"></div>
+            <div class="tl-empty"></div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-empty"></div>
+            <div class="tl-dot"></div>
+            <div class="tl-content"><h3>Killonz Shop</h3><p>كل قطعة تُباع أو تُركّب هنا، أنا جربتها أو اشتغلت بها فعليًا. المحتوى دليل على المصداقية.</p></div>
         </div>
     </div>
 </section>
+
+<!-- SERVICES -->
+<section class="services-section">
+    <div class="section-header">
+        <span class="tag">خدماتنا</span>
+        <h2>ماذا <span>نقدّم</span></h2>
+    </div>
+    <div class="services-grid">
+        <div class="service-card">
+            <div class="service-num">01</div>
+            <h3>إصلاح اللابتوبات</h3>
+            <p>إصلاح لابتوبات وأجهزة كمبيوتر — هاردوير وسوفتوير — بتشخيص دقيق وشرح واضح لكل خطوة.</p>
+        </div>
+        <div class="service-card">
+            <div class="service-num">02</div>
+            <h3>ترقيات الأداء</h3>
+            <p>ترقيات أداء وتجميعات مخصّصة تناسب ميزانيتك واحتياجاتك الفعلية.</p>
+        </div>
+        <div class="service-card">
+            <div class="service-num">03</div>
+            <h3>بيع الأجهزة</h3>
+            <p>بيع أجهزة وملحقات مختارة بعناية — كل قطعة جُرِّبت قبل ما توصلك.</p>
+        </div>
+        <div class="service-card">
+            <div class="service-num">04</div>
+            <h3>أسعار شفافة</h3>
+            <p>أسعار واضحة بدون تحايل وشرح صريح لكل خطوة. تعرف وين يروح كل دينار.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SIGNATURE -->
+<section class="signature-section">
+    <div class="sig-bg-text">KILLONZ</div>
+    <div class="sig-content">
+        <span class="tag">كلمة أخيرة</span>
+        <p class="sig-quote">
+            مش مجرد Shop — هذه <em>خبرة</em>، محتوى،
+            واسم يتحط عليه <em>الثقة</em>.
+        </p>
+        <div class="sig-author">
+            <span class="dot"></span>
+            <span>— Killonz (أمين)</span>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
